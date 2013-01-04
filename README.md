@@ -12,7 +12,7 @@
   * Cross-platform Make (CMake) v2.6.2+
   * GNU Make or equivalent.
   * GCC or an alternative, reasonably conformant C++ compiler.
-  * Boost C++ Libraries v1.37+ [HEADERS and LIBRARIES] (We have prepare it)
+  * Boost C++ Libraries v1.37+ [HEADERS and LIBRARIES] 
 
 ## 2. BUILDING
  

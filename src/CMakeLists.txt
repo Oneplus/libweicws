@@ -2,6 +2,8 @@ INCLUDE_DIRECTORIES (
     ../include;
     ./;
     ./utils/)
+#    ${THIRDPARTY_PATH}/boost;
+#    ${THIRDPARTY_PATH}/crfsuite/include;)
 
 LINK_DIRECTORIES (
     ../lib)

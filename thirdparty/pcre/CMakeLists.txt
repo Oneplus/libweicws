@@ -69,7 +69,6 @@ IF (NOT IS_DIRECTORY ${INCLUDE_OUTPUT_DIR})
     FILE(MAKE_DIRECTORY ${INCLUDE_OUTPUT_DIR})
 ENDIF()
 
-MESSAGE(STATUS ${PROJECT_BINARY_DIR})
 # Increased minimum to 2.8.0 to support newer add_test features
 
 CMAKE_MINIMUM_REQUIRED(VERSION 2.8.0)
@@ -719,279 +718,283 @@ IF(PCRE_BUILD_PCREGREP)
     TARGET_LINK_LIBRARIES(pcregrep pcreposix ${PCREGREP_LIBS})
 ENDIF(PCRE_BUILD_PCREGREP)
 
+# 2013-01-06
+# The Testing section is hacked by Oneplus 
+#
 # Testing
-IF(PCRE_BUILD_TESTS)
-    ENABLE_TESTING()
+# IF(PCRE_BUILD_TESTS)
+#     ENABLE_TESTING()
+# 
+#     SET(PCRETEST_SOURCES pcretest.c)
+#     IF(PCRE_BUILD_PCRE8)
+#         LIST(APPEND PCRETEST_SOURCES pcre_printint.c)
+#     ENDIF(PCRE_BUILD_PCRE8)
+#     IF(PCRE_BUILD_PCRE16)
+#         LIST(APPEND PCRETEST_SOURCES pcre16_printint.c)
+#     ENDIF(PCRE_BUILD_PCRE16)
+#     IF(PCRE_BUILD_PCRE32)
+#         LIST(APPEND PCRETEST_SOURCES pcre32_printint.c)
+#     ENDIF(PCRE_BUILD_PCRE32)
+# 
+#     ADD_EXECUTABLE(pcretest ${PCRETEST_SOURCES})
+#     SET(targets ${targets} pcretest)
+#     IF(PCRE_BUILD_PCRE8)
+#         LIST(APPEND PCRETEST_LIBS pcreposix pcre)
+#     ENDIF(PCRE_BUILD_PCRE8)
+#     IF(PCRE_BUILD_PCRE16)
+#         LIST(APPEND PCRETEST_LIBS pcre16)
+#     ENDIF(PCRE_BUILD_PCRE16)
+#     IF(PCRE_BUILD_PCRE32)
+#         LIST(APPEND PCRETEST_LIBS pcre32)
+#     ENDIF(PCRE_BUILD_PCRE32)
+#     TARGET_LINK_LIBRARIES(pcretest ${PCRETEST_LIBS})
+# 
+#     IF(PCRE_SUPPORT_JIT)
+#         ADD_EXECUTABLE(pcre_jit_test pcre_jit_test.c)
+#         SET(targets ${targets} pcre_jit_test)
+#         SET(PCRE_JIT_TEST_LIBS )
+#         IF(PCRE_BUILD_PCRE8)
+#             LIST(APPEND PCRE_JIT_TEST_LIBS pcre)
+#         ENDIF(PCRE_BUILD_PCRE8)
+#         IF(PCRE_BUILD_PCRE16)
+#             LIST(APPEND PCRE_JIT_TEST_LIBS pcre16)
+#         ENDIF(PCRE_BUILD_PCRE16)
+#         IF(PCRE_BUILD_PCRE32)
+#             LIST(APPEND PCRE_JIT_TEST_LIBS pcre32)
+#         ENDIF(PCRE_BUILD_PCRE32)
+#         TARGET_LINK_LIBRARIES(pcre_jit_test ${PCRE_JIT_TEST_LIBS})
+#     ENDIF(PCRE_SUPPORT_JIT)
+# 
+#     IF(PCRE_BUILD_PCRECPP)
+#         ADD_EXECUTABLE(pcrecpp_unittest pcrecpp_unittest.cc)
+#         SET(targets ${targets} pcrecpp_unittest)
+#         TARGET_LINK_LIBRARIES(pcrecpp_unittest pcrecpp)
+#         IF(MINGW AND NON_STANDARD_LIB_NAMES AND NOT PCRE_STATIC)
+#             SET_TARGET_PROPERTIES(pcrecpp
+#                 PROPERTIES PREFIX ""
+#                 )
+#         ENDIF(MINGW AND NON_STANDARD_LIB_NAMES AND NOT PCRE_STATIC)
+# 
+#         ADD_EXECUTABLE(pcre_scanner_unittest pcre_scanner_unittest.cc)
+#         SET(targets ${targets} pcre_scanner_unittest)
+#         TARGET_LINK_LIBRARIES(pcre_scanner_unittest pcrecpp)
+# 
+#         ADD_EXECUTABLE(pcre_stringpiece_unittest pcre_stringpiece_unittest.cc)
+#         SET(targets ${targets} pcre_stringpiece_unittest)
+#         TARGET_LINK_LIBRARIES(pcre_stringpiece_unittest pcrecpp)
+#     ENDIF(PCRE_BUILD_PCRECPP)
+# 
+#     # exes in Debug location tested by the RunTest shell script
+#     # via "make test"
+#     IF(PCRE_BUILD_PCREGREP)
+#         GET_TARGET_PROPERTY(PCREGREP_EXE pcregrep DEBUG_LOCATION)
+#     ENDIF(PCRE_BUILD_PCREGREP)
+# 
+#     GET_TARGET_PROPERTY(PCRETEST_EXE pcretest DEBUG_LOCATION)
+# 
+#     # =================================================
+#     # Write out a CTest configuration file
+#     #
+#     FILE(WRITE ${PROJECT_BINARY_DIR}/CTestCustom.ctest
+#         "# This is a generated file.
+#         MESSAGE(\"When testing is complete, review test output in the
+#             \\\"${PROJECT_BINARY_DIR}/Testing/Temporary\\\" folder.\")
+#         MESSAGE(\" \")
+#         ")
+# 
+#     FILE(WRITE ${PROJECT_BINARY_DIR}/pcre_test.sh
+#         "#! /bin/sh
+#         # This is a generated file.
+#         srcdir=${PROJECT_SOURCE_DIR}
+#         pcretest=${PCRETEST_EXE}
+#         source ${PROJECT_SOURCE_DIR}/RunTest
+#         if test \"$?\" != \"0\"; then exit 1; fi
+#         # End
+#         ")
+# 
+#     IF(UNIX)
+#         ADD_TEST(pcre_test      sh ${PROJECT_BINARY_DIR}/pcre_test.sh)
+#     ENDIF(UNIX)
+# 
+#     IF(PCRE_BUILD_PCREGREP)
+#         FILE(WRITE ${PROJECT_BINARY_DIR}/pcre_grep_test.sh
+#             "#! /bin/sh
+#             # This is a generated file.
+#             srcdir=${PROJECT_SOURCE_DIR}
+#             pcregrep=${PCREGREP_EXE}
+#             pcretest=${PCRETEST_EXE}
+#             source ${PROJECT_SOURCE_DIR}/RunGrepTest
+#             if test \"$?\" != \"0\"; then exit 1; fi
+#             # End
+#             ")
+# 
+#         IF(UNIX)
+#             ADD_TEST(pcre_grep_test sh ${PROJECT_BINARY_DIR}/pcre_grep_test.sh)
+#         ENDIF(UNIX)
+#     ENDIF(PCRE_BUILD_PCREGREP)
+# 
+#     IF(WIN32)
+#         # Provide environment for executing the bat file version of RunTest
+#         FILE(TO_NATIVE_PATH ${PROJECT_SOURCE_DIR} winsrc)
+#         FILE(TO_NATIVE_PATH ${PROJECT_BINARY_DIR} winbin)
+#         FILE(TO_NATIVE_PATH ${PCRETEST_EXE} winexe)
+#         
+#         FILE(WRITE ${PROJECT_BINARY_DIR}/pcre_test.bat
+#             "\@REM This is a generated file.
+#             \@echo off
+#             setlocal
+#             SET srcdir=\"${winsrc}\"
+#             SET pcretest=\"${winexe}\"
+#             if not [%CMAKE_CONFIG_TYPE%]==[] SET pcretest=\"${winbin}\\%CMAKE_CONFIG_TYPE%\\pcretest.exe\"
+#             call %srcdir%\\RunTest.Bat
+#             if errorlevel 1 exit /b 1
+#             echo RunTest.bat tests successfully completed
+#             ")
+# 
+#         ADD_TEST(NAME pcre_test_bat
+#             COMMAND pcre_test.bat)
+#         SET_TESTS_PROPERTIES(pcre_test_bat PROPERTIES
+#             PASS_REGULAR_EXPRESSION "RunTest\\.bat tests successfully completed")
+# 
+#         IF("$ENV{OSTYPE}" STREQUAL "msys")
+#             # Both the sh and bat file versions of RunTest are run if make test is used
+#             # in msys
+#             ADD_TEST(pcre_test_sh    sh.exe ${PROJECT_BINARY_DIR}/pcre_test.sh)
+#             IF(PCRE_BUILD_PCREGREP)
+#                 ADD_TEST(pcre_grep_test  sh.exe ${PROJECT_BINARY_DIR}/pcre_grep_test.sh)
+#             ENDIF(PCRE_BUILD_PCREGREP)
+#         ENDIF("$ENV{OSTYPE}" STREQUAL "msys")
+#     ENDIF(WIN32)
+# 
+#     # Changed to accommodate testing whichever location was just built
+#     IF(PCRE_SUPPORT_JIT)
+#         ADD_TEST(pcre_jit_test         pcre_jit_test)
+#     ENDIF(PCRE_SUPPORT_JIT)
+# 
+#     IF(PCRE_BUILD_PCRECPP)
+#         ADD_TEST(pcrecpp_test          pcrecpp_unittest)
+#         ADD_TEST(pcre_scanner_test     pcre_scanner_unittest)
+#         ADD_TEST(pcre_stringpiece_test pcre_stringpiece_unittest)
+#     ENDIF(PCRE_BUILD_PCRECPP)
+# ENDIF(PCRE_BUILD_TESTS)
 
-    SET(PCRETEST_SOURCES pcretest.c)
-    IF(PCRE_BUILD_PCRE8)
-        LIST(APPEND PCRETEST_SOURCES pcre_printint.c)
-    ENDIF(PCRE_BUILD_PCRE8)
-    IF(PCRE_BUILD_PCRE16)
-        LIST(APPEND PCRETEST_SOURCES pcre16_printint.c)
-    ENDIF(PCRE_BUILD_PCRE16)
-    IF(PCRE_BUILD_PCRE32)
-        LIST(APPEND PCRETEST_SOURCES pcre32_printint.c)
-    ENDIF(PCRE_BUILD_PCRE32)
+# Installation
+SET(CMAKE_INSTALL_ALWAYS 1)
 
-    ADD_EXECUTABLE(pcretest ${PCRETEST_SOURCES})
-    SET(targets ${targets} pcretest)
-    IF(PCRE_BUILD_PCRE8)
-        LIST(APPEND PCRETEST_LIBS pcreposix pcre)
-    ENDIF(PCRE_BUILD_PCRE8)
-    IF(PCRE_BUILD_PCRE16)
-        LIST(APPEND PCRETEST_LIBS pcre16)
-    ENDIF(PCRE_BUILD_PCRE16)
-    IF(PCRE_BUILD_PCRE32)
-        LIST(APPEND PCRETEST_LIBS pcre32)
-    ENDIF(PCRE_BUILD_PCRE32)
-    TARGET_LINK_LIBRARIES(pcretest ${PCRETEST_LIBS})
+INSTALL(TARGETS ${targets}
+    RUNTIME DESTINATION bin
+    LIBRARY DESTINATION lib
+    ARCHIVE DESTINATION lib)
 
-    IF(PCRE_SUPPORT_JIT)
-        ADD_EXECUTABLE(pcre_jit_test pcre_jit_test.c)
-        SET(targets ${targets} pcre_jit_test)
-        SET(PCRE_JIT_TEST_LIBS )
-        IF(PCRE_BUILD_PCRE8)
-            LIST(APPEND PCRE_JIT_TEST_LIBS pcre)
-        ENDIF(PCRE_BUILD_PCRE8)
-        IF(PCRE_BUILD_PCRE16)
-            LIST(APPEND PCRE_JIT_TEST_LIBS pcre16)
-        ENDIF(PCRE_BUILD_PCRE16)
-        IF(PCRE_BUILD_PCRE32)
-            LIST(APPEND PCRE_JIT_TEST_LIBS pcre32)
-        ENDIF(PCRE_BUILD_PCRE32)
-        TARGET_LINK_LIBRARIES(pcre_jit_test ${PCRE_JIT_TEST_LIBS})
-    ENDIF(PCRE_SUPPORT_JIT)
+INSTALL(FILES ${PCRE_HEADERS} ${PCREPOSIX_HEADERS} DESTINATION include)
 
-    IF(PCRE_BUILD_PCRECPP)
-        ADD_EXECUTABLE(pcrecpp_unittest pcrecpp_unittest.cc)
-        SET(targets ${targets} pcrecpp_unittest)
-        TARGET_LINK_LIBRARIES(pcrecpp_unittest pcrecpp)
-        IF(MINGW AND NON_STANDARD_LIB_NAMES AND NOT PCRE_STATIC)
-            SET_TARGET_PROPERTIES(pcrecpp
-                PROPERTIES PREFIX ""
-                )
-        ENDIF(MINGW AND NON_STANDARD_LIB_NAMES AND NOT PCRE_STATIC)
+FILE(GLOB html ${PROJECT_SOURCE_DIR}/doc/html/*.html)
+FILE(GLOB man1 ${PROJECT_SOURCE_DIR}/doc/*.1)
+FILE(GLOB man3 ${PROJECT_SOURCE_DIR}/doc/*.3)
 
-        ADD_EXECUTABLE(pcre_scanner_unittest pcre_scanner_unittest.cc)
-        SET(targets ${targets} pcre_scanner_unittest)
-        TARGET_LINK_LIBRARIES(pcre_scanner_unittest pcrecpp)
+IF(PCRE_BUILD_PCRECPP)
+    INSTALL(FILES ${PCRECPP_HEADERS} DESTINATION include)
+ELSE(PCRE_BUILD_PCRECPP)
+    # Remove pcrecpp.3
+    FOREACH(man ${man3})
+        GET_FILENAME_COMPONENT(man_tmp ${man} NAME)
+        IF(NOT man_tmp STREQUAL "pcrecpp.3")
+            SET(man3_new ${man3} ${man})
+        ENDIF(NOT man_tmp STREQUAL "pcrecpp.3")
+    ENDFOREACH(man ${man3})
+    SET(man3 ${man3_new})
+ENDIF(PCRE_BUILD_PCRECPP)
 
-        ADD_EXECUTABLE(pcre_stringpiece_unittest pcre_stringpiece_unittest.cc)
-        SET(targets ${targets} pcre_stringpiece_unittest)
-        TARGET_LINK_LIBRARIES(pcre_stringpiece_unittest pcrecpp)
-    ENDIF(PCRE_BUILD_PCRECPP)
+# 2013-01-06
+# The installing documents section is hacked by Oneplus
+# there is no need for documents
+#
+# INSTALL(FILES ${man1} DESTINATION man/man1)
+# INSTALL(FILES ${man3} DESTINATION man/man3)
+# INSTALL(FILES ${html} DESTINATION share/doc/pcre/html)
 
-    # exes in Debug location tested by the RunTest shell script
-    # via "make test"
-    IF(PCRE_BUILD_PCREGREP)
-        GET_TARGET_PROPERTY(PCREGREP_EXE pcregrep DEBUG_LOCATION)
-    ENDIF(PCRE_BUILD_PCREGREP)
+# help, only for nice output
+IF(BUILD_SHARED_LIBS)
+    SET(BUILD_STATIC_LIBS OFF)
+ELSE(BUILD_SHARED_LIBS)
+    SET(BUILD_STATIC_LIBS ON)
+ENDIF(BUILD_SHARED_LIBS)
 
-    GET_TARGET_PROPERTY(PCRETEST_EXE pcretest DEBUG_LOCATION)
+IF(PCRE_SHOW_REPORT)
+    STRING(TOUPPER "${CMAKE_BUILD_TYPE}" buildtype)
+    IF (CMAKE_C_FLAGS)
+        SET(cfsp " ")
+    ENDIF(CMAKE_C_FLAGS)
+    IF (CMAKE_CXX_FLAGS)
+        SET(cxxfsp " ")
+    ENDIF(CMAKE_CXX_FLAGS)
+    MESSAGE(STATUS "")
+    MESSAGE(STATUS "")
+    MESSAGE(STATUS "PCRE configuration summary:")
+    MESSAGE(STATUS "")
+    MESSAGE(STATUS "  Install prefix .................. : ${CMAKE_INSTALL_PREFIX}")
+    MESSAGE(STATUS "  C compiler ...................... : ${CMAKE_C_COMPILER}")
+    MESSAGE(STATUS "  C++ compiler .................... : ${CMAKE_CXX_COMPILER}")
+    MESSAGE(STATUS "  C compiler flags ................ : ${CMAKE_C_FLAGS}${cfsp}${CMAKE_C_FLAGS_${buildtype}}")
+    MESSAGE(STATUS "  C++ compiler flags .............. : ${CMAKE_CXX_FLAGS}${cxxfsp}${CMAKE_CXX_FLAGS_${buildtype}}")
+    MESSAGE(STATUS "")
+    MESSAGE(STATUS "  Build 8 bit PCRE library ........ : ${PCRE_BUILD_PCRE8}")
+    MESSAGE(STATUS "  Build 16 bit PCRE library ....... : ${PCRE_BUILD_PCRE16}")
+    MESSAGE(STATUS "  Build 32 bit PCRE library ....... : ${PCRE_BUILD_PCRE32}")
+    MESSAGE(STATUS "  Build C++ library ............... : ${PCRE_BUILD_PCRECPP}")
+    MESSAGE(STATUS "  Enable JIT compiling support .... : ${PCRE_SUPPORT_JIT}")
+    MESSAGE(STATUS "  Enable UTF support .............. : ${PCRE_SUPPORT_UTF}")
+    MESSAGE(STATUS "  Unicode properties .............. : ${PCRE_SUPPORT_UNICODE_PROPERTIES}")
+    MESSAGE(STATUS "  Newline char/sequence ........... : ${PCRE_NEWLINE}")
+    MESSAGE(STATUS "  \\R matches only ANYCRLF ......... : ${PCRE_SUPPORT_BSR_ANYCRLF}")
+    MESSAGE(STATUS "  EBCDIC coding ................... : ${PCRE_EBCDIC}")
+    MESSAGE(STATUS "  EBCDIC coding with NL=0x25 ...... : ${PCRE_EBCDIC_NL25}")
+    MESSAGE(STATUS "  Rebuild char tables ............. : ${PCRE_REBUILD_CHARTABLES}")
+    MESSAGE(STATUS "  No stack recursion .............. : ${PCRE_NO_RECURSE}")
+    MESSAGE(STATUS "  POSIX mem threshold ............. : ${PCRE_POSIX_MALLOC_THRESHOLD}")
+    MESSAGE(STATUS "  Internal link size .............. : ${PCRE_LINK_SIZE}")
+    MESSAGE(STATUS "  Match limit ..................... : ${PCRE_MATCH_LIMIT}")
+    MESSAGE(STATUS "  Match limit recursion ........... : ${PCRE_MATCH_LIMIT_RECURSION}")
+    MESSAGE(STATUS "  Build shared libs ............... : ${BUILD_SHARED_LIBS}")
+    MESSAGE(STATUS "  Build static libs ............... : ${BUILD_STATIC_LIBS}")
+    MESSAGE(STATUS "  Build pcregrep .................. : ${PCRE_BUILD_PCREGREP}")
+    MESSAGE(STATUS "  Enable JIT in pcregrep .......... : ${PCRE_SUPPORT_PCREGREP_JIT}")
+    MESSAGE(STATUS "  Buffer size for pcregrep ........ : ${PCREGREP_BUFSIZE}")
+    MESSAGE(STATUS "  Build tests (implies pcretest  .. : ${PCRE_BUILD_TESTS}")
+    MESSAGE(STATUS "               and pcregrep)")
+    IF(ZLIB_FOUND)
+        MESSAGE(STATUS "  Link pcregrep with libz ......... : ${PCRE_SUPPORT_LIBZ}")
+    ELSE(ZLIB_FOUND)
+        MESSAGE(STATUS "  Link pcregrep with libz ......... : Library not found" )
+    ENDIF(ZLIB_FOUND)
+    IF(BZIP2_FOUND)
+        MESSAGE(STATUS "  Link pcregrep with libbz2 ....... : ${PCRE_SUPPORT_LIBBZ2}")
+    ELSE(BZIP2_FOUND)
+        MESSAGE(STATUS "  Link pcregrep with libbz2 ....... : Library not found" )
+    ENDIF(BZIP2_FOUND)
+    IF(EDITLINE_FOUND)
+        MESSAGE(STATUS "  Link pcretest with libeditline .. : ${PCRE_SUPPORT_LIBEDIT}")
+    ELSE(EDITLINE_FOUND)
+        MESSAGE(STATUS "  Link pcretest with libeditline .. : Library not found" )
+    ENDIF(EDITLINE_FOUND)
+    IF(READLINE_FOUND)
+        MESSAGE(STATUS "  Link pcretest with libreadline .. : ${PCRE_SUPPORT_LIBREADLINE}")
+    ELSE(READLINE_FOUND)
+        MESSAGE(STATUS "  Link pcretest with libreadline .. : Library not found" )
+    ENDIF(READLINE_FOUND)
+    MESSAGE(STATUS "  Support Valgrind .................: ${PCRE_SUPPORT_VALGRIND}")
+    MESSAGE(STATUS "  Support coverage .................: ${PCRE_SUPPORT_COVERAGE}")
 
-    # =================================================
-    # Write out a CTest configuration file
-    #
-    FILE(WRITE ${PROJECT_BINARY_DIR}/CTestCustom.ctest
-        "# This is a generated file.
-        MESSAGE(\"When testing is complete, review test output in the
-            \\\"${PROJECT_BINARY_DIR}/Testing/Temporary\\\" folder.\")
-        MESSAGE(\" \")
-        ")
-
-        FILE(WRITE ${PROJECT_BINARY_DIR}/pcre_test.sh
-            "#! /bin/sh
-            # This is a generated file.
-            srcdir=${PROJECT_SOURCE_DIR}
-            pcretest=${PCRETEST_EXE}
-            source ${PROJECT_SOURCE_DIR}/RunTest
-            if test \"$?\" != \"0\"; then exit 1; fi
-            # End
-            ")
-
-            IF(UNIX)
-                ADD_TEST(pcre_test      sh ${PROJECT_BINARY_DIR}/pcre_test.sh)
-            ENDIF(UNIX)
-
-            IF(PCRE_BUILD_PCREGREP)
-                FILE(WRITE ${PROJECT_BINARY_DIR}/pcre_grep_test.sh
-                    "#! /bin/sh
-                    # This is a generated file.
-                    srcdir=${PROJECT_SOURCE_DIR}
-                    pcregrep=${PCREGREP_EXE}
-                    pcretest=${PCRETEST_EXE}
-                    source ${PROJECT_SOURCE_DIR}/RunGrepTest
-                    if test \"$?\" != \"0\"; then exit 1; fi
-                    # End
-                    ")
-
-                    IF(UNIX)
-                        ADD_TEST(pcre_grep_test sh ${PROJECT_BINARY_DIR}/pcre_grep_test.sh)
-                    ENDIF(UNIX)
-                ENDIF(PCRE_BUILD_PCREGREP)
-
-                IF(WIN32)
-                    # Provide environment for executing the bat file version of RunTest
-                    FILE(TO_NATIVE_PATH ${PROJECT_SOURCE_DIR} winsrc)
-                    FILE(TO_NATIVE_PATH ${PROJECT_BINARY_DIR} winbin)
-                    FILE(TO_NATIVE_PATH ${PCRETEST_EXE} winexe)
-
-                    FILE(WRITE ${PROJECT_BINARY_DIR}/pcre_test.bat
-                        "\@REM This is a generated file.
-                        \@echo off
-                        setlocal
-                        SET srcdir=\"${winsrc}\"
-                        SET pcretest=\"${winexe}\"
-                        if not [%CMAKE_CONFIG_TYPE%]==[] SET pcretest=\"${winbin}\\%CMAKE_CONFIG_TYPE%\\pcretest.exe\"
-                        call %srcdir%\\RunTest.Bat
-                        if errorlevel 1 exit /b 1
-                        echo RunTest.bat tests successfully completed
-                        ")
-
-                        ADD_TEST(NAME pcre_test_bat
-                            COMMAND pcre_test.bat)
-                        SET_TESTS_PROPERTIES(pcre_test_bat PROPERTIES
-                            PASS_REGULAR_EXPRESSION "RunTest\\.bat tests successfully completed")
-
-                        IF("$ENV{OSTYPE}" STREQUAL "msys")
-                            # Both the sh and bat file versions of RunTest are run if make test is used
-                            # in msys
-                            ADD_TEST(pcre_test_sh    sh.exe ${PROJECT_BINARY_DIR}/pcre_test.sh)
-                            IF(PCRE_BUILD_PCREGREP)
-                                ADD_TEST(pcre_grep_test  sh.exe ${PROJECT_BINARY_DIR}/pcre_grep_test.sh)
-                            ENDIF(PCRE_BUILD_PCREGREP)
-                        ENDIF("$ENV{OSTYPE}" STREQUAL "msys")
-
-                    ENDIF(WIN32)
-
-                    # Changed to accommodate testing whichever location was just built
-
-                    IF(PCRE_SUPPORT_JIT)
-                        ADD_TEST(pcre_jit_test         pcre_jit_test)
-                    ENDIF(PCRE_SUPPORT_JIT)
-
-                    IF(PCRE_BUILD_PCRECPP)
-                        ADD_TEST(pcrecpp_test          pcrecpp_unittest)
-                        ADD_TEST(pcre_scanner_test     pcre_scanner_unittest)
-                        ADD_TEST(pcre_stringpiece_test pcre_stringpiece_unittest)
-                    ENDIF(PCRE_BUILD_PCRECPP)
-
-                ENDIF(PCRE_BUILD_TESTS)
-
-                # Installation
-                SET(CMAKE_INSTALL_ALWAYS 1)
-
-                INSTALL(TARGETS ${targets}
-                    RUNTIME DESTINATION bin
-                    LIBRARY DESTINATION lib
-                    ARCHIVE DESTINATION lib)
-
-                INSTALL(FILES ${PCRE_HEADERS} ${PCREPOSIX_HEADERS} DESTINATION include)
-
-                FILE(GLOB html ${PROJECT_SOURCE_DIR}/doc/html/*.html)
-                FILE(GLOB man1 ${PROJECT_SOURCE_DIR}/doc/*.1)
-                FILE(GLOB man3 ${PROJECT_SOURCE_DIR}/doc/*.3)
-
-                IF(PCRE_BUILD_PCRECPP)
-                    INSTALL(FILES ${PCRECPP_HEADERS} DESTINATION include)
-                ELSE(PCRE_BUILD_PCRECPP)
-                    # Remove pcrecpp.3
-                    FOREACH(man ${man3})
-                        GET_FILENAME_COMPONENT(man_tmp ${man} NAME)
-                        IF(NOT man_tmp STREQUAL "pcrecpp.3")
-                            SET(man3_new ${man3} ${man})
-                        ENDIF(NOT man_tmp STREQUAL "pcrecpp.3")
-                    ENDFOREACH(man ${man3})
-                    SET(man3 ${man3_new})
-                ENDIF(PCRE_BUILD_PCRECPP)
-
-                INSTALL(FILES ${man1} DESTINATION man/man1)
-                INSTALL(FILES ${man3} DESTINATION man/man3)
-                INSTALL(FILES ${html} DESTINATION share/doc/pcre/html)
-
-                # help, only for nice output
-                IF(BUILD_SHARED_LIBS)
-                    SET(BUILD_STATIC_LIBS OFF)
-                ELSE(BUILD_SHARED_LIBS)
-                    SET(BUILD_STATIC_LIBS ON)
-                ENDIF(BUILD_SHARED_LIBS)
-
-                IF(PCRE_SHOW_REPORT)
-                    STRING(TOUPPER "${CMAKE_BUILD_TYPE}" buildtype)
-                    IF (CMAKE_C_FLAGS)
-                        SET(cfsp " ")
-                    ENDIF(CMAKE_C_FLAGS)
-                    IF (CMAKE_CXX_FLAGS)
-                        SET(cxxfsp " ")
-                    ENDIF(CMAKE_CXX_FLAGS)
-                    MESSAGE(STATUS "")
-                    MESSAGE(STATUS "")
-                    MESSAGE(STATUS "PCRE configuration summary:")
-                    MESSAGE(STATUS "")
-                    MESSAGE(STATUS "  Install prefix .................. : ${CMAKE_INSTALL_PREFIX}")
-                    MESSAGE(STATUS "  C compiler ...................... : ${CMAKE_C_COMPILER}")
-                    MESSAGE(STATUS "  C++ compiler .................... : ${CMAKE_CXX_COMPILER}")
-                    MESSAGE(STATUS "  C compiler flags ................ : ${CMAKE_C_FLAGS}${cfsp}${CMAKE_C_FLAGS_${buildtype}}")
-                    MESSAGE(STATUS "  C++ compiler flags .............. : ${CMAKE_CXX_FLAGS}${cxxfsp}${CMAKE_CXX_FLAGS_${buildtype}}")
-                    MESSAGE(STATUS "")
-                    MESSAGE(STATUS "  Build 8 bit PCRE library ........ : ${PCRE_BUILD_PCRE8}")
-                    MESSAGE(STATUS "  Build 16 bit PCRE library ....... : ${PCRE_BUILD_PCRE16}")
-                    MESSAGE(STATUS "  Build 32 bit PCRE library ....... : ${PCRE_BUILD_PCRE32}")
-                    MESSAGE(STATUS "  Build C++ library ............... : ${PCRE_BUILD_PCRECPP}")
-                    MESSAGE(STATUS "  Enable JIT compiling support .... : ${PCRE_SUPPORT_JIT}")
-                    MESSAGE(STATUS "  Enable UTF support .............. : ${PCRE_SUPPORT_UTF}")
-                    MESSAGE(STATUS "  Unicode properties .............. : ${PCRE_SUPPORT_UNICODE_PROPERTIES}")
-                    MESSAGE(STATUS "  Newline char/sequence ........... : ${PCRE_NEWLINE}")
-                    MESSAGE(STATUS "  \\R matches only ANYCRLF ......... : ${PCRE_SUPPORT_BSR_ANYCRLF}")
-                    MESSAGE(STATUS "  EBCDIC coding ................... : ${PCRE_EBCDIC}")
-                    MESSAGE(STATUS "  EBCDIC coding with NL=0x25 ...... : ${PCRE_EBCDIC_NL25}")
-                    MESSAGE(STATUS "  Rebuild char tables ............. : ${PCRE_REBUILD_CHARTABLES}")
-                    MESSAGE(STATUS "  No stack recursion .............. : ${PCRE_NO_RECURSE}")
-                    MESSAGE(STATUS "  POSIX mem threshold ............. : ${PCRE_POSIX_MALLOC_THRESHOLD}")
-                    MESSAGE(STATUS "  Internal link size .............. : ${PCRE_LINK_SIZE}")
-                    MESSAGE(STATUS "  Match limit ..................... : ${PCRE_MATCH_LIMIT}")
-                    MESSAGE(STATUS "  Match limit recursion ........... : ${PCRE_MATCH_LIMIT_RECURSION}")
-                    MESSAGE(STATUS "  Build shared libs ............... : ${BUILD_SHARED_LIBS}")
-                    MESSAGE(STATUS "  Build static libs ............... : ${BUILD_STATIC_LIBS}")
-                    MESSAGE(STATUS "  Build pcregrep .................. : ${PCRE_BUILD_PCREGREP}")
-                    MESSAGE(STATUS "  Enable JIT in pcregrep .......... : ${PCRE_SUPPORT_PCREGREP_JIT}")
-                    MESSAGE(STATUS "  Buffer size for pcregrep ........ : ${PCREGREP_BUFSIZE}")
-                    MESSAGE(STATUS "  Build tests (implies pcretest  .. : ${PCRE_BUILD_TESTS}")
-                    MESSAGE(STATUS "               and pcregrep)")
-                    IF(ZLIB_FOUND)
-                        MESSAGE(STATUS "  Link pcregrep with libz ......... : ${PCRE_SUPPORT_LIBZ}")
-                    ELSE(ZLIB_FOUND)
-                        MESSAGE(STATUS "  Link pcregrep with libz ......... : Library not found" )
-                    ENDIF(ZLIB_FOUND)
-                    IF(BZIP2_FOUND)
-                        MESSAGE(STATUS "  Link pcregrep with libbz2 ....... : ${PCRE_SUPPORT_LIBBZ2}")
-                    ELSE(BZIP2_FOUND)
-                        MESSAGE(STATUS "  Link pcregrep with libbz2 ....... : Library not found" )
-                    ENDIF(BZIP2_FOUND)
-                    IF(EDITLINE_FOUND)
-                        MESSAGE(STATUS "  Link pcretest with libeditline .. : ${PCRE_SUPPORT_LIBEDIT}")
-                    ELSE(EDITLINE_FOUND)
-                        MESSAGE(STATUS "  Link pcretest with libeditline .. : Library not found" )
-                    ENDIF(EDITLINE_FOUND)
-                    IF(READLINE_FOUND)
-                        MESSAGE(STATUS "  Link pcretest with libreadline .. : ${PCRE_SUPPORT_LIBREADLINE}")
-                    ELSE(READLINE_FOUND)
-                        MESSAGE(STATUS "  Link pcretest with libreadline .. : Library not found" )
-                    ENDIF(READLINE_FOUND)
-                    MESSAGE(STATUS "  Support Valgrind .................: ${PCRE_SUPPORT_VALGRIND}")
-                    MESSAGE(STATUS "  Support coverage .................: ${PCRE_SUPPORT_COVERAGE}")
-
-                    IF(MINGW AND NOT PCRE_STATIC)
-                        MESSAGE(STATUS "  Non-standard dll names (prefix) . : ${NON_STANDARD_LIB_PREFIX}")
-                        MESSAGE(STATUS "  Non-standard dll names (suffix) . : ${NON_STANDARD_LIB_SUFFIX}")
-                    ENDIF(MINGW AND NOT PCRE_STATIC)
-                    MESSAGE(STATUS "")
-                ENDIF(PCRE_SHOW_REPORT)
+    IF(MINGW AND NOT PCRE_STATIC)
+        MESSAGE(STATUS "  Non-standard dll names (prefix) . : ${NON_STANDARD_LIB_PREFIX}")
+        MESSAGE(STATUS "  Non-standard dll names (suffix) . : ${NON_STANDARD_LIB_SUFFIX}")
+    ENDIF(MINGW AND NOT PCRE_STATIC)
+    MESSAGE(STATUS "")
+ENDIF(PCRE_SHOW_REPORT)
 
 
 MESSAGE(STATUS "")
-MESSAGE(STATUS "PCRE IS CONFIGED")
+MESSAGE(STATUS "[PASSED] PCRE IS CONFIGED")
 MESSAGE(STATUS "")
 
-                # end CMakeLists.txt
+# end CMakeLists.txt

@@ -1,5 +1,6 @@
 PROJECT (libweicws)
 
+CMAKE_MINIMUM_REQUIRED(VERSION 2.8.0)
 #SET(CMAKE_C_FLAGS           "$ENV{CXXFLAGS} -g -O3 -fPIC")
 #SET(CMAKE_C_FLAGS           "$ENV{CXXFLAGS} -g -O3 -fPIC")
 

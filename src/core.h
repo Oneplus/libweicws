@@ -1,5 +1,6 @@
 #ifndef __WEICWS_CORE_H__
 #define __WEICWS_CORE_H__
+#define PCRE_STATIC
 
 #include <iostream>
 #include <vector>

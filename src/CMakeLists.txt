@@ -1,21 +1,18 @@
-INCLUDE_DIRECTORIES (
-    ../include;
-    ./;
-    ./utils/)
-#    ${THIRDPARTY_PATH}/boost;
-#    ${THIRDPARTY_PATH}/crfsuite/include;)
+INCLUDE_DIRECTORIES ( internal utils )
 
 LINK_DIRECTORIES (
     ../lib)
 
 ADD_LIBRARY(weicws;
-    ./weicws.cpp;
     ./core.cpp;
+	./core.h
+	./weicws.cpp;
     ./encode.cpp;
     ./utils/ul_strlib_x.cpp)
 
 TARGET_LINK_LIBRARIES(weicws;
-    boost_regex
+    pcre
+    pcrecpp
     cqdb
     crfsuite)
 

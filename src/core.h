@@ -7,8 +7,8 @@
 
 #include "weicws.h"
 
-#include <boost/regex.hpp>
-#include <crfsuite/crfsuite.h>
+#include "pcrecpp.h"
+#include "crfsuite.h"
 
 #include "hash_map.hpp"
 
@@ -29,6 +29,7 @@ private:
     typedef hash_map<std::string, std::string> map_ss_t;
     typedef hash_map<std::string, int>::const_iterator  map_ptr_t;
     typedef hash_set<std::string> set_t;
+	/*< end of define */
 
     /*< define type of data */
     typedef std::string char_t;
@@ -44,6 +45,7 @@ private:
 
     typedef std::string feature_t;
     typedef std::vector<feature_t> features_t;
+	/*< end of define */
 
 private:
     crfsuite_model_t * model;
@@ -60,10 +62,21 @@ private:
 
     int ngram_total;
 
-    boost::regex url_pattern;
-    boost::regex eng_pattern;
+	pcrecpp::RE url_pattern;
+	pcrecpp::RE eng_pattern;
+    // pcrecpp::RE url_pattern("((https?|ftp|file)://[-A-Za-z0-9+&@#/%?=~_|!:,.;]*[-A-Za-z0-9+&@#/%=~_|])");
+    // pcrecpp::RE eng_pattern("((\\w+)([\\-'\\.]\\w+)*)");
 
 private:
+    /*
+     * Main process of pre-processing, includes converting
+     * character from SBC to DBC, tagging sentence by rule
+     *
+     *  @param[in]      input       the input sentence
+     *  @param[out]     output      the output sentence
+     */
+    void preprocess(const sentence_t &input,
+            sentence_t &output);
 
     /*
      * Pre-tagging sentence with rule, result in
@@ -73,21 +86,14 @@ private:
      *  @param[in]      pattern     the regex pattern
      */
     void rule_tagging(sentence_t &sentence,
-            boost::regex &pattern);
-
-    /*
-     *
-     *
-     *
-     */
-    void preprocess(const sentence_t &input, 
-            sentence_t &output);
+            const pcrecpp::RE &pattern);
 
     /*
      * Extract features from sentence.
      *
      *  @param[in]  sent    the sentence
      *  @param[in]  gid     the group id
+     *  @return     crfsuite_instance_t
      */
     crfsuite_instance_t extract_sentence_features(
             const sentence_t &sent,

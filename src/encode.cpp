@@ -28,31 +28,35 @@
 namespace weicws {
 
 void WeiCWSEngine::rule_tagging(sentence_t &sentence,
-        boost::regex &pattern) {
-
+        const pcrecpp::RE &pattern) {
+	
     std::vector<std::string> buffer;
     std::string prefix = "", match = "";
     std::string::const_iterator start = sentence.raw.begin();
     std::string::const_iterator end = sentence.raw.end();
-
+	pcrecpp::Arg *arg = NULL;
+	pcrecpp::Arg arg0 = &match; arg = &arg0;
+    
     // std::cerr << pattern.str() << std::endl;
     // std::cerr << sentence.raw << std::endl;
-    boost::match_results<std::string::const_iterator> what;
+    // boost::match_results<std::string::const_iterator> what;
     int base = 0;
     int offset = 0;
+	int consumed = -1;
     int num_chars = -1;
 
     num_chars = UTF::getCharactersFromUTF8String(
             sentence.raw,
             &buffer);
 
-    while (boost::regex_search(start,
-                end,
-                what,
-                pattern, 
-                boost::match_default)) {
+	while (start != end) {
+		pattern.DoMatch(string(start, end),
+			pcrecpp::RE::UNANCHORED, 
+			&consumed, 
+			&arg, 
+			1);
 
-        prefix = std::string(start, what[0].first);
+        prefix = std::string(start, start + consumed - match.size());
 
         num_chars = UTF::getCharactersFromUTF8String(
                 prefix,
@@ -67,7 +71,7 @@ void WeiCWSEngine::rule_tagging(sentence_t &sentence,
             }
         }
 
-        match = std::string(what[0].first, what[0].second);
+        // match = std::string(what[0].first, what[0].second);
 
         num_chars = UTF::getCharactersFromUTF8String(
                 match,
@@ -107,7 +111,7 @@ void WeiCWSEngine::rule_tagging(sentence_t &sentence,
         }
 
         base = base + offset;
-        start = what[0].second;
+        start = start + consumed;
     }
 
 }
@@ -128,11 +132,13 @@ void WeiCWSEngine::preprocess(const sentence_t &input,
         output.labels[i] = input.labels[i];
     }
 
-    // detect url
-    rule_tagging(output, url_pattern);
+    // detect 
+	rule_tagging(output, url_pattern);
+    // rule_tagging(output, url_pattern);
 
     // detect english word
-    rule_tagging(output, eng_pattern);
+	rule_tagging(output, pcrecpp::RE("((\\w+)([\\-'\\.]\\w+)*)"));
+    // rule_tagging(output, eng_pattern);
 
     // cache lexicon
     std::vector<std::vector<std::string> >sub_sentence(len + 1, std::vector<std::string>(len + 1, ""));
@@ -356,20 +362,26 @@ int WeiCWSEngine::extract_lexicon_character_features(
         int i,
         std::vector<std::string> &features) {
     // lexicon features
+	int ret = 0;
     if (lexicon_cache[i][0] > 0) {
         std::ostringstream S; S << lexicon_cache[i][0];
         features.push_back("f101=" + S.str());
+		++ ret;
     }
 
     if (lexicon_cache[i][1] > 0) {
         std::ostringstream S; S << lexicon_cache[i][1];
         features.push_back("f102=" + S.str());
+		++ ret;
     }
 
     if (lexicon_cache[i][2] > 0) {
         std::ostringstream S; S << lexicon_cache[i][2];
         features.push_back("f103=" + S.str());
+		++ ret;
     }
+
+	return ret;
 }
 
 floatval_t WeiCWSEngine::MI(const std::string &x,

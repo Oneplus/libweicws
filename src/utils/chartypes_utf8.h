@@ -1,4 +1,4 @@
-#ifndef __UL_CHARTYPE_H__
+﻿#ifndef __UL_CHARTYPE_H__
 #define __UL_CHARTYPE_H_
 
 #define DBC_TABLE_SIZE              132

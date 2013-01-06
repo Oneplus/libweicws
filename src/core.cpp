@@ -7,7 +7,9 @@
 
 namespace weicws {
 
-WeiCWSEngine::WeiCWSEngine() {
+WeiCWSEngine::WeiCWSEngine():url_pattern("((https?|ftp|file)"
+	"://[-A-Za-z0-9+&@#/%?=~_|!:,.;]*[-A-Za-z0-9+&@#/%=~_|])"),
+	eng_pattern("((\\w+)([\\-'\\.]\\w+)*)"){
 }
 
 WeiCWSEngine::~WeiCWSEngine() {
@@ -131,14 +133,14 @@ int WeiCWSEngine::load(const Option& opt) {
     } else {
         // TRACE_LOG("%d rav is loaded.", rav_lexicon.size());
     }
-
-    url_pattern.assign(
+	
+    /*url_pattern = pcrecpp::RE(
             "(https?|ftp|file):"
             "//[-A-Za-z0-9+&@#/%?=~_|!:,.;]*"
             "[-A-Za-z0-9+&@#/%=~_|]");
 
-    eng_pattern.assign(
-            "(\\w+)([\\-'\\.]\\w+)*");
+    eng_pattern = pcrecpp::RE("(\\w+)([\\-'\\.]\\w+)*");*/
+
 
     if (model_file != NULL) {
         if (ret = crfsuite_create_instance_from_file(model_file, (void **)&model)) {

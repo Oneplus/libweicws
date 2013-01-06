@@ -63,6 +63,13 @@
 
 PROJECT(PCRE C CXX)
 
+SET(PROJECT_BINARY_DIR ${SOURCE}/internal)
+
+IF (NOT IS_DIRECTORY ${PROJECT_BINARY_DIR})
+    FILE(MAKE_DIRECTORY ${PROJECT_BINARY_DIR})
+ENDIF()
+
+MESSAGE(STATUS ${PROJECT_BINARY_DIR})
 # Increased minimum to 2.8.0 to support newer add_test features
 
 CMAKE_MINIMUM_REQUIRED(VERSION 2.8.0)
@@ -417,6 +424,11 @@ IF(PCRE_BUILD_PCRECPP)
     CONFIGURE_FILE(pcrecpparg.h.in
         ${PROJECT_BINARY_DIR}/pcrecpparg.h
         @ONLY)
+
+    CONFIGURE_FILE(pcrecpp.h
+        ${PROJECT_BINARY_DIR}/pcrecpp.h
+        @ONLY)
+
 ENDIF(PCRE_BUILD_PCRECPP)
 
 # Character table generation
@@ -955,5 +967,10 @@ IF(PCRE_BUILD_TESTS)
                     ENDIF(MINGW AND NOT PCRE_STATIC)
                     MESSAGE(STATUS "")
                 ENDIF(PCRE_SHOW_REPORT)
+
+
+MESSAGE(STATUS "")
+MESSAGE(STATUS "PCRE IS CONFIGED")
+MESSAGE(STATUS "")
 
                 # end CMakeLists.txt

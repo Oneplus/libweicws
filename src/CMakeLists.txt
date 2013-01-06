@@ -1,7 +1,6 @@
 INCLUDE_DIRECTORIES ( internal utils )
 
-LINK_DIRECTORIES (
-    ../lib)
+LINK_DIRECTORIES (${LIBRARY_OUTPUT_PATH}/)
 
 ADD_LIBRARY(weicws STATIC
     ./core.cpp 

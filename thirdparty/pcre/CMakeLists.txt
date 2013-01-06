@@ -63,10 +63,10 @@
 
 PROJECT(PCRE C CXX)
 
-SET(PROJECT_BINARY_DIR ${SOURCE}/internal)
+SET(INCLUDE_OUTPUT_DIR ${SOURCE}/internal)
 
-IF (NOT IS_DIRECTORY ${PROJECT_BINARY_DIR})
-    FILE(MAKE_DIRECTORY ${PROJECT_BINARY_DIR})
+IF (NOT IS_DIRECTORY ${INCLUDE_OUTPUT_DIR})
+    FILE(MAKE_DIRECTORY ${INCLUDE_OUTPUT_DIR})
 ENDIF()
 
 MESSAGE(STATUS ${PROJECT_BINARY_DIR})
@@ -389,6 +389,9 @@ ENDIF(PCRE_NO_RECURSE)
 CONFIGURE_FILE(config-cmake.h.in
     ${PROJECT_BINARY_DIR}/config.h
     @ONLY)
+CONFIGURE_FILE(config-cmake.h.in
+    ${INCLUDE_OUTPUT_DIR}/config.h
+    @ONLY)
 
 # Parse version numbers and date out of configure.ac
 
@@ -414,6 +417,11 @@ CONFIGURE_FILE(pcre.h.in
     ${PROJECT_BINARY_DIR}/pcre.h
     @ONLY)
 
+CONFIGURE_FILE(pcre.h.in
+    ${INCLUDE_OUTPUT_DIR}/pcre.h
+    @ONLY)
+
+
 # What about pcre-config and libpcre.pc?
 
 IF(PCRE_BUILD_PCRECPP)
@@ -428,6 +436,19 @@ IF(PCRE_BUILD_PCRECPP)
     CONFIGURE_FILE(pcrecpp.h
         ${PROJECT_BINARY_DIR}/pcrecpp.h
         @ONLY)
+
+    CONFIGURE_FILE(pcre_stringpiece.h.in
+        ${INCLUDE_OUTPUT_DIR}/pcre_stringpiece.h
+        @ONLY)
+
+    CONFIGURE_FILE(pcrecpparg.h.in
+        ${INCLUDE_OUTPUT_DIR}/pcrecpparg.h
+        @ONLY)
+
+    CONFIGURE_FILE(pcrecpp.h
+        ${INCLUDE_OUTPUT_DIR}/pcrecpp.h
+        @ONLY)
+
 
 ENDIF(PCRE_BUILD_PCRECPP)
 
@@ -459,7 +480,7 @@ SET(PCRE_HEADERS ${PROJECT_BINARY_DIR}/pcre.h)
 IF(PCRE_BUILD_PCRE8)
     SET(PCRE_SOURCES
         pcre_byte_order.c
-        ${PROJECT_BINARY_DIR}/pcre_chartables.c
+        pcre_chartables.c
         pcre_compile.c
         pcre_config.c
         pcre_dfa_exec.c

@@ -1,12 +1,7 @@
-INCLUDE_DIRECTORIES (
-    ./
-    ../include/)
+INCLUDE_DIRECTORIES ( ./  ../include/)
 
-LINK_DIRECTORIES (
-    ../lib)
+LINK_DIRECTORIES ( ${LIBRARY_OUTPUT_PATH}/ )
 
-ADD_EXECUTABLE(demo;
-    ./weicws.cpp)
+ADD_EXECUTABLE(demo weicws.cpp)
 
-TARGET_LINK_LIBRARIES(demo;
-    weicws)
+TARGET_LINK_LIBRARIES( demo weicws )

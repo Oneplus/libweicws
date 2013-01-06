@@ -47,7 +47,7 @@ SET (CRFSUITE_SOURCES
     ${CRF_SOURCE_DIR}/train_passive_aggressive.c
     ${CRF_SOURCE_DIR}/vecmath.h )
 
-ADD_LIBRARY (cqdb ${CQDB_SOURCES} )
-ADD_LIBRARY (crfsuite ${CRFSUITE_SOURCES} )
+ADD_LIBRARY (cqdb STATIC ${CQDB_SOURCES} )
+ADD_LIBRARY (crfsuite STATIC ${CRFSUITE_SOURCES} )
 
 TARGET_LINK_LIBRARIES (crfsuite lbfgs)

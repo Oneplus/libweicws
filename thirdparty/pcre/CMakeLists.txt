@@ -459,7 +459,7 @@ SET(PCRE_HEADERS ${PROJECT_BINARY_DIR}/pcre.h)
 IF(PCRE_BUILD_PCRE8)
     SET(PCRE_SOURCES
         pcre_byte_order.c
-        pcre_chartables.c
+        ${PROJECT_BINARY_DIR}/pcre_chartables.c
         pcre_compile.c
         pcre_config.c
         pcre_dfa_exec.c

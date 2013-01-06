@@ -1,0 +1,8 @@
+INCLUDE_DIRECTORIES( internal )
+
+ADD_EXECUTABLE( test
+    encode.cc )
+
+LINK_DIRECTORIES( ${LIBRARY_OUTPUT_PATH} )
+
+TARGET_LINK_LIBRARIES( pcrecpp )

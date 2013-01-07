@@ -1,5 +1,7 @@
 # LIBWEICWS
 
+[![Build Status](https://travis-ci.org/Oneplus/libweicws.png?branch=master)](https://travis-ci.org/Oneplus/libweicws)
+
 ### TOC
 
  1. Introduction
@@ -32,9 +34,9 @@
   * [PCRE-8.32](http://www.pcre.org/)
   * [crfsuite-0.12](http://www.chokkan.org/software/crfsuite/)
 
-
- NOTE: YOU DON'T NEED TO LINK PCRE AND CRFSUITE TO THIS PROJECT, WE HAVE
- INTEGRATED ABOVE TWO LIBRARIES INTO IT AND HACKED THE SOURCE A TINY LITTLE BIT.
+NOTE: You don't need to link libpcre and libcrfsuit to this project, we have
+integrated above two libraries into it and hacked the source of their makefile
+a tiny little bit.
 
 ## 3. BUILDING
  
@@ -62,8 +64,8 @@
 
 ## 4. Example
 
- You can refer the `demo.cpp`. It's an example of loading model and conduct
- segmentation
+ You can refer the [demo.cpp](https://github.com/Oneplus/libweicws/blob/master/test/demo.cpp).
+ It's an example of loading model and conducting segmentation over Chinese sentence.
 
 ## 5. LICENSE
 
@@ -72,7 +74,7 @@
  
 ## 6. ChangeLog
 
- Still empty.
+ 2013-01-07 public inside HIT-SCIR Lab;
 
 ## TODO
 

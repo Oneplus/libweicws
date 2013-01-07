@@ -46,9 +46,6 @@ void WeiCWSEngine::rule_tagging(sentence_t &sentence,
     pcrecpp::Arg *arg = NULL;
     pcrecpp::Arg arg0 = &match; arg = &arg0;
     
-    // std::cerr << pattern.str() << std::endl;
-    // std::cerr << sentence.raw << std::endl;
-    // boost::match_results<std::string::const_iterator> what;
     int base = 0;
     int offset = 0;
     int consumed = -1;
@@ -59,11 +56,15 @@ void WeiCWSEngine::rule_tagging(sentence_t &sentence,
             &buffer);
 
     while (start != end) {
-        pattern.DoMatch(string(start, end),
-            pcrecpp::RE::UNANCHORED, 
-            &consumed, 
-            &arg, 
-            1);
+
+        // no match exit
+        if (!pattern.DoMatch(string(start, end),
+                    pcrecpp::RE::UNANCHORED, 
+                    &consumed, 
+                    &arg, 
+                    1)) {
+            break;
+        }
 
         prefix = std::string(start, start + consumed - match.size());
 
@@ -129,8 +130,8 @@ void WeiCWSEngine::preprocess(const sentence_t &input,
         sentence_t &output) {
 
     int len = input.forms.size();
-    output.raw = input.raw;
 
+    output.raw = input.raw;
     output.forms.resize(len);
     output.labels.resize(len);
     output.extra_labels.resize(len);
@@ -138,16 +139,14 @@ void WeiCWSEngine::preprocess(const sentence_t &input,
     // convert sbc2dbc
     for (int i = 0; i < len; ++ i) {
         output.forms[i] = SBC2DBC(input.forms[i]);
-        output.labels[i] = input.labels[i];
+        // output.labels[i] = input.labels[i];
     }
 
     // detect 
     rule_tagging(output, url_pattern);
-    // rule_tagging(output, url_pattern);
 
     // detect english word
-    rule_tagging(output, pcrecpp::RE("((\\w+)([\\-'\\.]\\w+)*)"));
-    // rule_tagging(output, eng_pattern);
+    rule_tagging(output, eng_pattern);
 
     // cache lexicon
     std::vector<std::vector<std::string> >sub_sentence(len + 1, std::vector<std::string>(len + 1, ""));

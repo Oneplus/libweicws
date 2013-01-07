@@ -177,12 +177,18 @@ int WeiCWSEngine::load(const Option& opt) {
 
 int WeiCWSEngine::segment(const std::string& sentence, std::vector<std::string>& result) {
 
+    result.clear();
     /* ==========================================
      *  SPLIT SENTENCE INTO CHARACTERS
      * ========================================== */
-    sentence_t sent;
 
+    sentence_t sent;
     sent.raw = chomp(sentence);
+
+    if (sent.raw.size() == 0) {
+        return 0;
+    }
+
     std::vector<word_t> words = split(sent.raw);
 
     int len = words.size();
@@ -237,7 +243,6 @@ int WeiCWSEngine::segment(const std::string& sentence, std::vector<std::string>&
         return -1;
     }
 
-    result.clear();
     word = sent.forms[0];
     for (int i = 1; i < len; ++ i) {
         ret = labels->to_string(labels, output[i], &label);

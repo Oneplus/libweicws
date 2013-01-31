@@ -19,7 +19,7 @@ public:
     int next(string &sentence) {
         sentence = "";
         lock_guard<mutex> guard(_mutex);
-        if (getline(cin, sentence, "\n")) {
+        if (getline(cin, sentence, '\n')) {
             return -1;
         }
         return 0;
@@ -86,7 +86,7 @@ int main() {
 
     list<thread *> thread_list;
     for (int i = 0; i < num_threads; ++ i) {
-        thread * t = new thread( multithread_segment, (void *)dispatcher );
+        thread * t = new thread( multithreaded_segment, (void *)dispatcher );
         thread_list.push_back( t );
     }
 

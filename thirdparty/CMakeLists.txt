@@ -4,10 +4,14 @@ SET ( LBFGS_DIR
 SET ( CRFSUITE_DIR
     ${THIRDPARTY_DIR}/crfsuite )
 
+SET ( TINYTHREADPP_DIR
+    ${THIRDPARTY_DIR}/tinythreadpp )
+
 SET ( PCRE_DIR
     ${THIRDPARTY_DIR}/pcre )
 
 ADD_SUBDIRECTORY (liblbfgs)
 ADD_SUBDIRECTORY (crfsuite)
 ADD_SUBDIRECTORY (pcre)
+ADD_SUBDIRECTORY (tinythreadpp)
 

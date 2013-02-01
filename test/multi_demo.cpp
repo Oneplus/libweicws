@@ -4,6 +4,7 @@
 
 #include "weicws.h"
 #include "tinythread.h"
+#include "fast_mutex.h"
 
 using namespace std;
 using namespace tthread;
@@ -18,11 +19,20 @@ public:
 
     int next(string &sentence) {
         sentence = "";
-        lock_guard<mutex> guard(_mutex);
-        if (getline(cin, sentence, '\n')) {
+        lock_guard<fast_mutex> guard(_mutex);
+        if (!getline(cin, sentence, '\n')) {
             return -1;
         }
         return 0;
+    }
+
+    void output(const vector<string> &result) {
+        lock_guard<fast_mutex> guard(_mutex);
+        for (int i = 0; i < result.size(); ++ i) {
+            cout << result[i];
+            cout << (i == result.size() - 1 ? '\n' : '|');
+        }
+        return;
     }
 
     weicws::Model * model() {
@@ -30,7 +40,7 @@ public:
     }
 
 private:
-    mutex           _mutex;
+    fast_mutex      _mutex;
     weicws::Model * _model;
     string          _sentence;
 };
@@ -49,11 +59,7 @@ void multithreaded_segment( void * args) {
             break;
 
         model->segment(sentence, result);
-
-        for (int i = 0; i < result.size(); ++ i) {
-            cout << result[i];
-            cout << (i == result.size() - 1 ? '\n' : '|');
-        }
+        dispatcher->output(result);
     }
 
     return;
@@ -80,7 +86,7 @@ int main() {
     cerr << "TRACE: Loading model is done" << endl;
 
     int num_threads = thread::hardware_concurrency();
-    cerr << "TRACE: Running" << num_threads << " thread(s)" << endl;
+    cerr << "TRACE: Running " << num_threads << " thread(s)" << endl;
 
     Dispatcher * dispatcher = new Dispatcher( &model );
 

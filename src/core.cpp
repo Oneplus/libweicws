@@ -220,10 +220,18 @@ int WeiCWSEngine::segment(const std::string& sentence, std::vector<std::string>&
 
     if (!crfsuite_instance_empty(&inst)) {
         if (ret = tagger->set(tagger, &inst)) {
+            // fail to set instance to tagger
+            // free memory
+            crfsuite_instance_finish(&inst);
+            free(output);
             return -1;
         }
 
         if (ret = tagger->viterbi(tagger, output, &score)) {
+            // fail to set instance to tagger
+            // free memory
+            crfsuite_instance_finish(&inst);
+            free(output);
             return -1;
         }
     }
@@ -248,7 +256,12 @@ int WeiCWSEngine::segment(const std::string& sentence, std::vector<std::string>&
             word += sent.forms[i];
         }
     }
+
     result.push_back(word);
+
+    // free memory
+    crfsuite_instance_finish(&inst);
+    free(output);
 
     return result.size();
 }

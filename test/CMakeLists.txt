@@ -4,9 +4,9 @@ INCLUDE_DIRECTORIES ( ./
 
 LINK_DIRECTORIES ( ${LIBRARY_OUTPUT_PATH}/ )
 
-ADD_EXECUTABLE(demo demo.cpp)
+ADD_EXECUTABLE(weicws-test demo.cpp)
 
-TARGET_LINK_LIBRARIES( demo weicws
+TARGET_LINK_LIBRARIES( weicws-test weicws
     pcre
     pcrecpp
     cqdb
@@ -18,7 +18,7 @@ ADD_EXECUTABLE(multi_demo
 
 IF (NOT WIN32)
     TARGET_LINK_LIBRARIES( multi_demo weicws pthread )
-ELSE()
+ELSE (NOT WIN32)
     TARGET_LINK_LIBRARIES( multi_demo weicws )
 ENDIF()
 

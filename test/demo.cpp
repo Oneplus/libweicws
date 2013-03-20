@@ -32,7 +32,7 @@ int main() {
 
         for (int i = 0; i < result.size(); ++ i) {
             cout << result[i];
-            cout << (i == result.size() - 1 ? '\n' : '|');
+            cout << (i == result.size() - 1 ? '\n' : '\t');
         }
     }
     return 0;

@@ -10,6 +10,7 @@
  4. Example
  5. License
  6. ChangLog
+ 7. Models
 
 ## 1. INTRODUCTION
 
@@ -81,6 +82,14 @@ a tiny little bit.
  2013-01-07
  
   * publish first version of the library. 
+
+## 7. Model
+
+ Model suiteable for current version can be downloaded from [here](http://pan.baidu.com/share/link?shareid=397022&uk=3305192391).
+ 
+ Histories:
+ 
+ * [libweicws-model-0.0.1](http://pan.baidu.com/share/link?shareid=397022&uk=3305192391)
 
 ## TODO
 

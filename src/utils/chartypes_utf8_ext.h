@@ -1,4 +1,4 @@
-﻿#ifndef __UL_CHARTYPE_EXT_H__
+#ifndef __UL_CHARTYPE_EXT_H__
 #define __UL_CHARTYPE_EXT_H__
 
 const char * DBCTable_ext[] = {

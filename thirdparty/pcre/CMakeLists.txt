@@ -617,10 +617,20 @@ SET(targets)
 # Libraries
 # pcre
 IF(PCRE_BUILD_PCRE8)
-    ADD_LIBRARY(pcre ${PCRE_HEADERS} ${PCRE_SOURCES} ${PROJECT_BINARY_DIR}/config.h)
+    ADD_LIBRARY(pcre SHARED ${PCRE_HEADERS} ${PCRE_SOURCES} ${PROJECT_BINARY_DIR}/config.h)
     SET(targets ${targets} pcre)
-    ADD_LIBRARY(pcreposix ${PCREPOSIX_HEADERS} ${PCREPOSIX_SOURCES})
+
+    ADD_LIBRARY(pcre_STATIC STATIC ${PCRE_HEADERS} ${PCRE_SOURCES} ${PROJECT_BINARY_DIR}/config.h)
+    SET_TARGET_PROPERTIES (pcre_STATIC PROPERTIES OUTPUT_NAME pcre)
+    SET(targets ${targets} pcre_STATIC)
+
+    ADD_LIBRARY(pcreposix SHARED ${PCREPOSIX_HEADERS} ${PCREPOSIX_SOURCES})
     SET(targets ${targets} pcreposix)
+    TARGET_LINK_LIBRARIES(pcreposix pcre)
+
+    ADD_LIBRARY(pcreposix_STATIC ${PCREPOSIX_HEADERS} ${PCREPOSIX_SOURCES})
+    SET_TARGET_PROPERTIES (pcreposix_STATIC PROPERTIES OUTPUT_NAME pcreposix)
+    SET(targets ${targets} pcreposix_STATIC)
     TARGET_LINK_LIBRARIES(pcreposix pcre)
 
     IF(MINGW AND NOT PCRE_STATIC)

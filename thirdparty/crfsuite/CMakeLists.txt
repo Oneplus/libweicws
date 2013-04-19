@@ -49,10 +49,16 @@ SET (CRFSUITE_SOURCES
     ${CRF_SOURCE_DIR}/train_passive_aggressive.c
     ${CRF_SOURCE_DIR}/vecmath.h )
 
-ADD_LIBRARY (cqdb STATIC ${CQDB_SOURCES} )
-ADD_LIBRARY (crfsuite STATIC ${CRFSUITE_SOURCES} )
+ADD_LIBRARY (cqdb SHARED ${CQDB_SOURCES} )
+ADD_LIBRARY (cqdb_STATIC STATIC ${CQDB_SOURCES} )
+set_target_properties (cqdb_STATIC PROPERTIES OUTPUT_NAME cqdb)
+
+ADD_LIBRARY (crfsuite SHARED ${CRFSUITE_SOURCES} )
+ADD_LIBRARY (crfsuite_STATIC STATIC ${CRFSUITE_SOURCES} )
+set_target_properties (crfsuite_STATIC PROPERTIES OUTPUT_NAME crfsuite)
 
 TARGET_LINK_LIBRARIES (crfsuite lbfgs cqdb)
+#TARGET_LINK_LIBRARIES (crfsuite_STATIC lbfgs_STATIC cqdb_STATIC)
 
 CONFIGURE_FILE(${CRFSUITE_DIR}/include/crfsuite.h
     ${PROJECT_BINARY_DIR}/crfsuite.h)

@@ -27,7 +27,9 @@ in your python code to use the module in your own program.
 
 ## 3.Envronment:
 gcc version 4.6.3
+
 g++ version 4.6.3
+
 SWIG version 2.0.4
 
 ## 

@@ -25,7 +25,7 @@ then you can type:
 
 in your python code to use the module in your own program.
 
-## 3.Envronment:
+## 3.Environment:
 gcc version 4.6.3
 
 g++ version 4.6.3

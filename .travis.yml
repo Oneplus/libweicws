@@ -5,6 +5,7 @@ compiler:
 
 env:
     global:
+        - secure: "pTgnYQsLuuIpYhq9Bgqw6/ugCObSNVUqaLWGp8u1R7whNz736A44Eyx/OfqWTNnMOov7DmdcmOspvu7M+YO1H4D05A1uLL0+p0hBaEBXK3wjXRz4U2l24migo30LUsqvnc8YUZt82ZIBeooHge6ty4zJSpiuxilMn4k1WdDp1a0="
 
 addons:
     coverity_scan:

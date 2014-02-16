@@ -1,6 +1,8 @@
 # LIBWEICWS
 
 [![Build Status](https://travis-ci.org/Oneplus/libweicws.png?branch=master)](https://travis-ci.org/Oneplus/libweicws)
+[![Bitdeli Badge](https://d2weczhvl823v0.cloudfront.net/Oneplus/libweicws/trend.png)](https://bitdeli.com/free "Bitdeli Badge")
+[![coverity scan build status]("https://scan.coverity.com/projects/1433/badge.svg")](https://scan.coverity.com/projects/1433/)
 
 ### TOC
 

@@ -13,10 +13,7 @@ addons:
             name: "Oneplus/libweicws"
             description: "Your project description here"
         notification_email: oneplus.lau@gmail.com
-        build_command_prepend:
-            #- "sudo apt-get install cmake"
-            - "mkdir build"
-            - "./configure"
+        build_command_prepend: "mkdir build & ./configure"
         build_command: "make"
         branch_pattern: master
 

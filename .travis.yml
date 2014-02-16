@@ -14,7 +14,7 @@ addons:
             description: "Your project description here"
         notification_email: oneplus.lau@gmail.com
         build_command_prepend:
-            - "sudo apt-get install cmake"
+            #- "sudo apt-get install cmake"
             - "mkdir build"
             - "./configure"
         build_command: "make"
